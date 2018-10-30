@@ -17,66 +17,57 @@ class WeatherDisplayViewController: UIViewController {
     @IBOutlet weak var highTempLabel: UILabel!
     @IBOutlet weak var lowTempLabel: UILabel!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-  
+    
         
-        
-        // When the screen first loads, set the default values for the UI
-        setupDefaultUI()
-        
-        
-        
-        let darkSkyURL = "https://api.darksky.net/forecast/"
-        let apiKeys = APIKeys()
-        let darkSkyKey = apiKeys.darkSkyKey
-        let latitude = "37.004842"
-        let longitude = "-85.925876"
-        
-        let url = darkSkyURL + darkSkyKey + "/" + latitude + "," + longitude
-        
-        let request = Alamofire.request(url)
-        
-        request.responseJSON { response in
-            switch response.result {
-            case .success(let value):
-                let json = JSON(value)
-                print(json)
-            case .failure(let error):
-                print(error.localizedDescription)
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            // Do any additional setup after loading the view, typically from a nib.
+            
+            //When the screen first loads, set the default values for the UI
+            setupDefaultUI()
+            
+            let apiManager = APIManager()
+            
+            apiManager.geocode(address: "Glasgow,+Kentucky") { (data, error) in
+                //If we get back an error
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
                 
+                guard let data = data else {
+                    return
+                }
+                
+                print(data.formattedAddress)
+                print(data.latitude)
+                print(data.longitude)
+            }
+            
+            apiManager.getWeather(latitude: 37.004842, longitude: -85.925876) { (data, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                
+                guard let data = data else {
+                    return
+                }
+                
+                print(data.temperature)
+                print(data.highTemperature)
+                print(data.lowTemperature)
+                print(data.condition.icon)
             }
         }
-    let googleBaseURL = "https://maps.googleapis.com/maps/api/geocode/json?address="
-        let googleRequestURL = googleBaseURL + "Glasgow,+Kentcuky" + "&key=" + apiKeys.googleKey
-        let googleRequest = Alamofire.request(googleRequestURL)
         
-        googleRequest.responseJSON { response in
-            switch response.result {
-            case .success(let value):
-            let json = JSON(value)
-            print(json)
-            case .failure(let error):
-                print(error.localizedDescription)
-            
-        }
-    
-        }
-    }
-        // This function will give the UI some default whenever we first we first load the app
+        //This function will give the UI some default values whenever we first load the app
         func setupDefaultUI() {
             locationLabel.text = ""
-            iconLabel.text = ""
-            currentTempLabel.text = "Enter a location"
+            iconLabel.text = "☂️"
+            currentTempLabel.text = "Enter a location!"
             highTempLabel.text = "-"
             lowTempLabel.text = "-"
         }
-        
-        
-    
-    
-
-
 }
 
