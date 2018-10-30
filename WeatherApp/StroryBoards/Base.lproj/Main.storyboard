@@ -12,7 +12,7 @@
         <!--Tempest-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="WeatherDisplayViewController" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="WeatherDisplayViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -39,7 +39,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="90º" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sti-dw-y3p">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="90º" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1PR-QO-PyU">
                                         <rect key="frame" x="133.5" y="172" width="76.5" height="54"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
                                         <nil key="textColor"/>
@@ -99,7 +99,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="currentTempLabel" destination="sti-dw-y3p" id="PHV-Pw-ayk"/>
+                        <outlet property="currentTempLabel" destination="1PR-QO-PyU" id="lnb-DR-xoX"/>
                         <outlet property="highTempLabel" destination="3Fe-y2-kSe" id="3He-IR-Tkc"/>
                         <outlet property="iconLabel" destination="lQN-4P-P0L" id="pn2-Zt-FkD"/>
                         <outlet property="locationLabel" destination="D5n-05-nAF" id="9D8-Tm-Pv9"/>
@@ -134,7 +134,7 @@
                     </view>
                     <connections>
                         <outlet property="locationSearchBar" destination="yTv-nn-33c" id="K0C-NW-yWl"/>
-                        <segue destination="ouz-OE-VEm" kind="unwind" identifier="unwindToWeatherDisplay" unwindAction="unwindToWeatherDisplayWithSegue:" id="c8W-CP-guF"/>
+                        <segue destination="ouz-OE-VEm" kind="unwind" identifier="unwindToMainDisplay" unwindAction="unwindToMainDisplayWithSegue:" id="81r-fh-AhX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dIF-qd-C74" userLabel="First Responder" sceneMemberID="firstResponder"/>

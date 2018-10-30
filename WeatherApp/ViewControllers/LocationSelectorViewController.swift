@@ -23,7 +23,7 @@ class LocationSelectorViewController: UIViewController,UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        locationSearchBar.delegate = self
         // Do any additional setup after loading the view.
     }
     //if something goes wrong with
@@ -33,31 +33,53 @@ class LocationSelectorViewController: UIViewController,UISearchBarDelegate {
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // Try to replace any spaces in the search bar text with + signs. If you can't, stop running the function
-        guard let searchAddress = searchBar.text?.replacingOccurrences(of: "", with: "+") else {
+        guard let searchAddress = searchBar.text?.replacingOccurrences(of: " ", with: "+") else {
             return
         }
-        apiManager.geocode(address: searchAddress) {
-            (geocodingData, error) in
+        retrieveGeocodingData(searchAddress: searchAddress)
+    }
+    
+    func retrieveWeatherData(latitude: Double, longitude: Double) {
+        apiManager.getWeather(latitude: latitude, longitude: longitude) { (weatherData, error) in
+            if let receivedError = error {
+                print(receivedError.localizedDescription)
+                self.handleError()
+                return
+            }
+            
+            if let receivedData = weatherData {
+                self.weatherData = receivedData
+                self.performSegue(withIdentifier: "unwindToMainDisplay", sender: self)
+            } else {
+                self.handleError()
+                return
+            }
+        }
+    }
+    
+    func retrieveGeocodingData(searchAddress: String) {
+        apiManager.geocode(address: searchAddress) { (geocodingData, error) in
             if let recievedError = error {
                 print(recievedError.localizedDescription)
                 self.handleError()
                 return
             }
-            if let recievedData = geocodingData {
-                self.geocodingData = recievedData
-                //Use that data to make a dark sky call
+            
+            if let recivedData = geocodingData {
+                self.geocodingData = recivedData
+                self.retrieveWeatherData(latitude: recivedData.latitude, longitude: recivedData.longitude)
+            } else {
+                self.handleError()
+                return
             }
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if let destinationVC = segue.destination as? WeatherDisplayViewController, let retreivedGeocodingData = geocodingData, let retrievedWeatherData = weatherData {
+            destinationVC.displayGeocodingData = retreivedGeocodingData
+            destinationVC.displayWeatherData = retrievedWeatherData
+        }
     }
-    */
-   
 }
+
